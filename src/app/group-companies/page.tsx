@@ -1,0 +1,73 @@
+'use client';
+
+import React, { useState } from 'react';
+import { Navbar } from '@/components/layout/Navbar';
+import { Footer } from '@/components/layout/Footer';
+import { WhatsAppFloat } from '@/components/layout/WhatsAppFloat';
+import { MobileBottomBar } from '@/components/layout/MobileBottomBar';
+import { ConsultationModal } from '@/components/ui/ConsultationModal';
+import { GroupCompaniesSection } from '@/components/sections/GroupCompaniesSection';
+import { ContactSection } from '@/components/sections/ContactSection';
+import { Building2, ArrowRight, ExternalLink, ShieldCheck, Sun, PackageCheck, Globe2, Wrench } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import { COMPANY_INFO } from '@/data/company';
+
+export default function GroupCompaniesPage() {
+  const [isConsultationOpen, setIsConsultationOpen] = useState(false);
+
+  return (
+    <main className="min-h-screen bg-[#FAFBF9] text-slate-900 flex flex-col selection:bg-amber-400 selection:text-slate-950 overflow-x-hidden">
+      <Navbar onOpenConsultation={() => setIsConsultationOpen(true)} />
+
+      {/* Hero Header for Group Companies Page */}
+      <section className="pt-28 sm:pt-36 pb-12 sm:pb-16 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 text-white relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 text-xs font-mono font-bold uppercase tracking-wider">
+            <Building2 className="w-3.5 h-3.5" />
+            <span>TDS AGRO PRODUCER COMPANY LIMITED • SUBSIDIARIES & GROUP ENTERPRISES</span>
+          </div>
+
+          <h1 className="text-4xl sm:text-6xl font-black font-display tracking-tight text-white leading-tight max-w-3xl">
+            Group Companies & Subsidiary Structure.
+          </h1>
+
+          <p className="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed font-normal">
+            TDS Agro is the parent company. This directory presents the five separate group companies and subsidiary websites without adding TDS Agro as a circular child link.
+          </p>
+
+          <div className="pt-2 flex flex-wrap items-center gap-4 text-xs font-mono text-slate-400">
+            <div className="flex items-center gap-1.5 text-amber-300">
+              <ShieldCheck className="w-4 h-4" />
+              <span>Parent Enterprise: TDS Agro Producer Co. Ltd.</span>
+            </div>
+            <span>•</span>
+            <a
+              href={COMPANY_INFO.solarGroupUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-amber-400 hover:underline flex items-center gap-1"
+            >
+              <span>Reference: tdssolar.in/tdsgroup.php</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Group Companies Grid */}
+      <GroupCompaniesSection />
+
+      {/* Contact Section */}
+      <ContactSection />
+
+      <Footer />
+      <WhatsAppFloat />
+      <MobileBottomBar onOpenConsultation={() => setIsConsultationOpen(true)} />
+      <ConsultationModal
+        isOpen={isConsultationOpen}
+        onClose={() => setIsConsultationOpen(false)}
+        defaultCapacity="Group Companies General Inquiry"
+      />
+    </main>
+  );
+}
