@@ -98,7 +98,7 @@ const HERO_DIVISIONS = [
       { label: 'Service Hubs', value: 'Pan-UP Hubs' },
       { label: 'Warranty Support', value: 'Up to 5 Yrs' },
     ],
-    bgVideo: '/slide.mp4',
+    bgVideo: '/tds_motors.mp4',
     bgImage: '/business-solar.jpg',
     icon: Wrench,
   },
