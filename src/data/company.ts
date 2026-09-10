@@ -5,9 +5,20 @@ export const COMPANY_INFO = {
   tagline: 'Leading Agricultural Innovation, Global Imports & Exports, Clean Solar Energy and Farm Mechanization.',
   subTagline:
     'Parent entity orchestrating core agriculture, import & export trading, solar energy infrastructure, and modern agricultural equipment.',
-  phone: '07800010016',
-  formattedPhone: '+91 78000 10016',
-  email: 'info@tdsagro.in',
+  phone: '07800010013',
+  formattedPhone: '+91 78000 10013',
+  email: 'tds@tdssolar.in',
+  phoneLines: [
+    { number: '07800010013', label: 'B2B & Bulk Enquiries', formatted: '+91 78000 10013' },
+    { number: '07800010064', label: 'Residential Enquiries', formatted: '+91 78000 10064' },
+    { number: '07800010016', label: 'C&I Enquiries', formatted: '+91 78000 10016' },
+    { number: '07800070017', label: 'Service & Support', formatted: '+91 78000 70017' },
+  ],
+  emailAddresses: [
+    { address: 'tds@tdssolar.in', label: 'Solar Desk' },
+    { address: 'tdsagro@waareepartners.com', label: 'Waaree Partner Desk' },
+    { address: 'tdssolarenergy@gmail.com', label: 'Solar Energy Desk' },
+  ],
   website: 'https://tdsagro.in',
   solarWebsite: 'https://tdssolar.in/',
   solarGroupUrl: 'https://tdssolar.in/tdsgroup.php',

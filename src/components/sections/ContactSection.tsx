@@ -78,15 +78,41 @@ export const ContactSection: React.FC = () => {
                   <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-800">
                     Corporate Helpline & Direct Desk
                   </h4>
-                  <a
-                    href={`tel:${COMPANY_INFO.phone}`}
-                    className="text-base font-bold font-mono text-slate-950 hover:text-amber-600 transition-colors block mt-1"
-                  >
-                    {COMPANY_INFO.formattedPhone}
-                  </a>
-                  <span className="text-[11px] font-mono text-slate-500 block mt-0.5">
+                  <div className="mt-2 space-y-1.5">
+                    {COMPANY_INFO.phoneLines.map((contact) => (
+                      <a
+                        key={contact.number}
+                        href={`tel:${contact.number}`}
+                        className="flex flex-wrap items-baseline gap-x-2 text-sm font-bold font-mono text-slate-950 hover:text-amber-600 transition-colors"
+                      >
+                        <span>{contact.formatted}</span>
+                        <span className="text-[10px] font-normal text-slate-500">({contact.label})</span>
+                      </a>
+                    ))}
+                  </div>
+                  <span className="text-[11px] font-mono text-slate-500 block mt-2">
                     Monday to Saturday • 9:30 AM to 6:30 PM
                   </span>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-3xl bg-slate-50 border border-slate-200 shadow-sm flex items-start gap-4">
+                <div className="w-10 h-10 rounded-2xl bg-amber-100 border border-amber-300 text-amber-700 flex items-center justify-center shrink-0 shadow-sm">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-800">Email Desks</h4>
+                  <div className="mt-2 space-y-1">
+                    {COMPANY_INFO.emailAddresses.map((contact) => (
+                      <a
+                        key={contact.address}
+                        href={`mailto:${contact.address}`}
+                        className="block text-sm font-mono text-slate-700 hover:text-amber-600 transition-colors"
+                      >
+                        {contact.address}
+                      </a>
+                    ))}
+                  </div>
                 </div>
               </div>
 

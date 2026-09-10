@@ -130,24 +130,26 @@ export const Footer: React.FC = () => {
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-start gap-2">
                 <Phone className="w-4 h-4 text-amber-400 shrink-0" />
-                <a
-                  href={`tel:${COMPANY_INFO.phone}`}
-                  className="text-slate-300 hover:text-amber-400 transition-colors"
-                >
-                  {COMPANY_INFO.formattedPhone}
-                </a>
+                <div className="space-y-1">
+                  {COMPANY_INFO.phoneLines.map((contact) => (
+                    <a key={contact.number} href={`tel:${contact.number}`} className="block text-slate-300 hover:text-amber-400 transition-colors">
+                      {contact.formatted} <span className="text-slate-500">({contact.label})</span>
+                    </a>
+                  ))}
+                </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-start gap-2">
                 <Mail className="w-4 h-4 text-amber-400 shrink-0" />
-                <a
-                  href={`mailto:${COMPANY_INFO.email}`}
-                  className="text-slate-300 hover:text-amber-400 transition-colors"
-                >
-                  {COMPANY_INFO.email}
-                </a>
+                <div className="space-y-1">
+                  {COMPANY_INFO.emailAddresses.map((contact) => (
+                    <a key={contact.address} href={`mailto:${contact.address}`} className="block text-slate-300 hover:text-amber-400 transition-colors">
+                      {contact.address}
+                    </a>
+                  ))}
+                </div>
               </div>
 
               <div className="pt-1">
