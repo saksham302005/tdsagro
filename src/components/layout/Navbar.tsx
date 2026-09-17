@@ -33,8 +33,10 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [divisionDropdownOpen, setDivisionDropdownOpen] = useState(false);
   const [groupDropdownOpen, setGroupDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const divisionDropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -64,6 +66,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation }) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setGroupDropdownOpen(false);
       }
+      if (divisionDropdownRef.current && !divisionDropdownRef.current.contains(event.target as Node)) {
+        setDivisionDropdownOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -86,13 +91,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation }) => {
     }
   };
 
-  const navLinks = [
-    { label: 'Agriculture', href: '/agriculture', active: pathname === '/agriculture' },
-    { label: 'Imports', href: '/imports', active: pathname === '/imports' },
-    { label: 'Exports', href: '/exports', active: pathname === '/exports' },
-    { label: 'Solar', href: '/solar', active: pathname === '/solar' },
-    { label: 'TDS Motors', href: '/motors', active: pathname === '/motors' },
-    { label: 'Directors', href: '/directors', active: pathname === '/directors' },
+  const divisionLinks = [
+    { label: 'Agriculture', description: 'Farm solutions & farmer partnerships', href: '/agriculture', icon: <Sprout className="w-4 h-4 text-emerald-600" /> },
+    { label: 'Imports', description: 'Inverters, lighting & equipment', href: '/imports', icon: <PackageCheck className="w-4 h-4 text-blue-600" /> },
+    { label: 'Exports', description: 'Grains, pulses & global trade', href: '/exports', icon: <Globe2 className="w-4 h-4 text-emerald-600" /> },
+    { label: 'Solar', description: 'Clean energy & EPC solutions', href: '/solar', icon: <Sun className="w-4 h-4 text-amber-500" /> },
+    { label: 'TDS Motors', description: 'Tractors & farm machinery', href: '/motors', icon: <Wrench className="w-4 h-4 text-rose-600" /> },
   ];
 
   return (
@@ -104,7 +108,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation }) => {
             : 'bg-white/90 backdrop-blur-md border-b border-slate-100 py-3 sm:py-3.5 text-slate-900'
         }`}
       >
-        <div className="w-full px-4 sm:px-6 lg:px-8 flex items-center justify-start flex-nowrap gap-4">
+        <div className="w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center flex-nowrap gap-4">
           {/* Official Parent Company Logo */}
           <div className="flex items-center gap-3 shrink-0">
             <Link href="/" className="flex items-center gap-2 group select-none" aria-label="TDS AGRO Parent Company Home">
@@ -118,7 +122,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation }) => {
           </div>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-2 xl:gap-3 ml-3 flex-none text-xs font-bold tracking-wider uppercase flex-nowrap">
+          <nav className="hidden lg:flex flex-1 items-center justify-center gap-2 xl:gap-3 ml-3 text-xs font-bold tracking-wider uppercase flex-nowrap">
             <Link
               href="/"
               className={`transition-colors duration-200 relative py-1 hover:text-amber-600 ${
@@ -129,18 +133,71 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation }) => {
               {pathname === '/' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-amber-500 rounded-full" />}
             </Link>
 
-            {navLinks.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={`transition-colors duration-200 relative py-1 whitespace-nowrap hover:text-amber-600 ${
-                  item.active ? 'text-amber-600 font-extrabold' : 'text-slate-700'
+            {/* Primary division landing pages */}
+            <div className="relative" ref={divisionDropdownRef}>
+              <button
+                onClick={() => setDivisionDropdownOpen(!divisionDropdownOpen)}
+                onMouseEnter={() => setDivisionDropdownOpen(true)}
+                className={`flex items-center gap-1 transition-colors duration-200 py-1 hover:text-amber-600 focus:outline-none ${
+                  divisionLinks.some((item) => item.href === pathname) ? 'text-amber-600 font-extrabold' : 'text-slate-700'
                 }`}
+                aria-expanded={divisionDropdownOpen}
               >
-                {item.label}
-                {item.active && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-amber-500 rounded-full" />}
-              </Link>
-            ))}
+                <span>Divisions</span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${divisionDropdownOpen ? 'rotate-180 text-amber-600' : ''}`} />
+              </button>
+
+              <AnimatePresence>
+                {divisionDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                    transition={{ duration: 0.18 }}
+                    onMouseLeave={() => setDivisionDropdownOpen(false)}
+                    className="absolute top-full left-0 mt-2 w-72 bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-3 z-50"
+                  >
+                    <div className="px-3 py-2 border-b border-slate-100">
+                      <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 font-bold">
+                        PRIMARY DIVISION LANDING PAGES
+                      </span>
+                    </div>
+                    <div className="mt-2 space-y-1">
+                      {divisionLinks.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setDivisionDropdownOpen(false)}
+                          className={`flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-colors group ${pathname === item.href ? 'bg-amber-50' : ''}`}
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                            {item.icon}
+                          </div>
+                          <div>
+                            <span className="block text-xs font-bold font-display text-slate-900 group-hover:text-amber-600">
+                              {item.label}
+                            </span>
+                            <span className="block text-[10px] text-slate-500 font-normal mt-0.5">
+                              {item.description}
+                            </span>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <Link
+              href="/directors"
+              className={`transition-colors duration-200 relative py-1 whitespace-nowrap hover:text-amber-600 ${
+                pathname === '/directors' ? 'text-amber-600 font-extrabold' : 'text-slate-700'
+              }`}
+            >
+              Directors
+              {pathname === '/directors' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-amber-500 rounded-full" />}
+            </Link>
 
             {/* Group Companies Dropdown Menu */}
             <div className="relative" ref={dropdownRef}>
@@ -235,7 +292,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation }) => {
           </nav>
 
           {/* Desktop Right CTA */}
-          <div className="hidden lg:flex items-center gap-3 shrink-0 ml-5 xl:ml-6">
+          <div className="hidden lg:flex items-center gap-3 shrink-0 ml-3 xl:ml-5">
             <a
               href={`tel:${COMPANY_INFO.phone}`}
               className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-700 hover:text-amber-600 transition-colors"
