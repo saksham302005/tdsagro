@@ -18,6 +18,8 @@ import { COMPANY_INFO } from '@/data/company';
 
 export const ContactSection: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [form, setForm] = useState({
     name: '',
     phone: '',
@@ -27,9 +29,26 @@ export const ContactSection: React.FC = () => {
     message: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setSubmitError('');
+
+    try {
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+
+      if (!response.ok) throw new Error('Lead submission failed');
+
+      setSubmitted(true);
+    } catch {
+      setSubmitError('We could not submit your inquiry right now. Please try again or call us directly.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -176,11 +195,13 @@ export const ContactSection: React.FC = () => {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      <label htmlFor="lead-name" className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1">
                         Full Name *
                       </label>
                       <input
                         type="text"
+                        id="lead-name"
+                        name="name"
                         required
                         value={form.name}
                         onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -190,11 +211,13 @@ export const ContactSection: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      <label htmlFor="lead-phone" className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1">
                         Phone Number *
                       </label>
                       <input
                         type="tel"
+                        id="lead-phone"
+                        name="phone"
                         required
                         value={form.phone}
                         onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -206,11 +229,13 @@ export const ContactSection: React.FC = () => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      <label htmlFor="lead-email" className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1">
                         Email Address
                       </label>
                       <input
                         type="email"
+                        id="lead-email"
+                        name="email"
                         value={form.email}
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
                         placeholder="name@example.com"
@@ -219,11 +244,13 @@ export const ContactSection: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      <label htmlFor="lead-city" className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1">
                         City / Region *
                       </label>
                       <input
                         type="text"
+                        id="lead-city"
+                        name="city"
                         required
                         value={form.city}
                         onChange={(e) => setForm({ ...form, city: e.target.value })}
@@ -234,30 +261,34 @@ export const ContactSection: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    <label htmlFor="lead-division" className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1">
                       Business Division of Interest *
                     </label>
                     <select
                       value={form.divisionInterest}
+                      id="lead-division"
+                      name="divisionInterest"
                       onChange={(e) => setForm({ ...form, divisionInterest: e.target.value })}
                       className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:outline-none focus:border-amber-500 font-medium"
                     >
                       <option value="General">General TDS Agro Inquiry</option>
-                      <option value="Agriculture">1. Agriculture & Farming Solutions</option>
-                      <option value="Imports">2. Imports (Inverters, Lighting, Furniture, Electronics)</option>
-                      <option value="Exports">3. Exports (Agricultural Crops & Produce)</option>
-                      <option value="Solar">4. Solar Energy (tdssolar.in & PM Surya Ghar)</option>
-                      <option value="TDS Motors">5. TDS Motors (Tractors & Agricultural Machinery)</option>
+                      <option value="Agriculture">Agriculture & Farming Solutions</option>
+                      <option value="Imports">Imports: Inverters, Lighting, Furniture & Electronics</option>
+                      <option value="Exports">Exports: Agricultural Crops & Produce</option>
+                      <option value="Solar">Solar Energy: PM Surya Ghar & EPC</option>
+                      <option value="TDS Motors">TDS Motors: Tractors & Agricultural Machinery</option>
                       <option value="Directors/Governance">Board of Directors / Corporate Governance</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    <label htmlFor="lead-message" className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1">
                       Message / Requirement Details
                     </label>
                     <textarea
                       rows={3}
+                      id="lead-message"
+                      name="message"
                       value={form.message}
                       onChange={(e) => setForm({ ...form, message: e.target.value })}
                       placeholder="Please describe your specific requirements or inquiry."
@@ -270,13 +301,15 @@ export const ContactSection: React.FC = () => {
                       type="submit"
                       className="w-full py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold font-mono tracking-widest text-xs uppercase rounded-xl transition-all shadow-md flex items-center justify-center gap-2 group"
                     >
-                      <span>Submit Inquiry</span>
+                      <span>{isSubmitting ? 'Submitting...' : 'Submit Inquiry'}</span>
                       <Send className="w-4 h-4 text-slate-950 group-hover:translate-x-1 transition-transform" />
                     </button>
                   </div>
 
+                  {submitError && <p role="alert" className="text-xs text-red-600 text-center">{submitError}</p>}
+
                   <p className="text-[10px] font-mono text-slate-500 text-center pt-2">
-                    Your information is protected by TDS Agro corporate privacy protocols.
+                    Your details are sent to our configured lead desk and are protected by our <a href="/privacy-policy" className="text-amber-700 underline">Privacy Policy</a>.
                   </p>
                 </form>
               )}

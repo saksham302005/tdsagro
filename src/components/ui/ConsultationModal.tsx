@@ -17,6 +17,8 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
   defaultCapacity,
 }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -28,12 +30,37 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
     message: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => {
-      // Keep state clear after celebration
-    }, 4000);
+    setIsSubmitting(true);
+    setSubmitError('');
+
+    try {
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          city: formData.city,
+          divisionInterest: 'Solar',
+          message: [
+            `Property type: ${formData.propertyType}`,
+            `Monthly bill: ${formData.monthlyBill}`,
+            `Target capacity: ${formData.capacity}`,
+            formData.message ? `Roof details: ${formData.message}` : '',
+          ].filter(Boolean).join('\n'),
+        }),
+      });
+
+      if (!response.ok) throw new Error('Consultation submission failed');
+      setIsSubmitted(true);
+    } catch {
+      setSubmitError('We could not submit your consultation. Please try again or call our help desk directly.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -244,12 +271,15 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                   <div className="pt-2">
                     <button
                       type="submit"
+                      disabled={isSubmitting}
                       className="w-full py-3.5 bg-forest-900 hover:bg-forest-800 text-solar-cream font-semibold tracking-widest text-xs uppercase rounded transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
                     >
-                      <span>Submit Consultation Request</span>
+                      <span>{isSubmitting ? 'Submitting...' : 'Submit Consultation Request'}</span>
                       <Send className="w-4 h-4 text-solar-gold" />
                     </button>
                   </div>
+
+                  {submitError && <p role="alert" className="text-xs text-red-600 text-center">{submitError}</p>}
 
                   <p className="text-[11px] text-charcoal-500 text-center mt-3">
                     Verified Privacy: Your information is strictly used for engineering evaluation by TDS Solar Energy.
