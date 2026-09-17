@@ -9,6 +9,15 @@ interface LeadPayload {
   message?: string;
 }
 
+const DEFAULT_GOOGLE_FORM_ACTION_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfvrM6gKgw8VeARnClne65CyqxczvL2gfBqu1YvkgSQ3d1Rig/formResponse';
+const DEFAULT_GOOGLE_FORM_FIELD_MAP = {
+  name: 'entry.2005620554',
+  email: 'entry.1045781291',
+  city: 'entry.1065046570',
+  phone: 'entry.1166974658',
+  message: 'entry.839337160',
+};
+
 export async function POST(request: Request) {
   const lead = (await request.json()) as Partial<LeadPayload>;
 
@@ -18,20 +27,16 @@ export async function POST(request: Request) {
 
   const payload = { ...lead, source: 'tdsagro.in contact form', receivedAt: new Date().toISOString() };
   const webhookUrl = process.env.LEAD_WEBHOOK_URL;
-  const googleFormActionUrl = process.env.GOOGLE_FORM_ACTION_URL;
+  const googleFormActionUrl = process.env.GOOGLE_FORM_ACTION_URL || DEFAULT_GOOGLE_FORM_ACTION_URL;
   const googleFormFieldMap = process.env.GOOGLE_FORM_FIELD_MAP;
-  let googleFormFields: Record<string, string> | undefined;
+  let googleFormFields: Record<string, string> = DEFAULT_GOOGLE_FORM_FIELD_MAP;
 
-  if (googleFormActionUrl && googleFormFieldMap) {
+  if (googleFormFieldMap) {
     try {
       googleFormFields = JSON.parse(googleFormFieldMap) as Record<string, string>;
     } catch {
       return NextResponse.json({ error: 'Google Form field mapping is invalid' }, { status: 503 });
     }
-  }
-
-  if (googleFormActionUrl && !googleFormFields) {
-    return NextResponse.json({ error: 'Google Form field mapping is not configured' }, { status: 503 });
   }
 
   if (!webhookUrl && !googleFormActionUrl) {
