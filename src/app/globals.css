@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-inter: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-syne: 'Space Grotesk', 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-inter);
+    background-color: #f6f8f4;
+    color: #0F172A;
+  }
+
+  body {
+    overflow-x: hidden;
+    background-color: #f6f8f4;
+    color: #0F172A;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  video {
+    display: block;
+    max-width: 100%;
+  }
+
+  ::selection {
+    background: #f2b84b;
+    color: #072418;
+  }
+
+  /* Custom Clean Light Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F1F5F9;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #D97706;
+  }
+}
+
+/* ---------------------------------------------------- */
+/* Modern Light-Mode OS Glassmorphism Utilities */
+/* ---------------------------------------------------- */
+
+/* Master Light OS Glass Panel */
+.os-glass-panel {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(208, 219, 208, 0.9);
+  box-shadow: 0 24px 50px -22px rgba(7, 36, 24, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+}
+
+/* Master Light OS Glass Card */
+.os-glass-card {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(208, 219, 208, 0.9);
+  box-shadow: 0 14px 30px -12px rgba(7, 36, 24, 0.14), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.os-glass-card:hover {
+  border-color: rgba(217, 119, 6, 0.4);
+  box-shadow: 0 20px 35px -10px rgba(217, 119, 6, 0.12), 0 0 0 1px rgba(217, 119, 6, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Light Mode Subtle Grid */
+.os-grid-pattern {
+  background-size: 42px 42px;
+  background-image: 
+    linear-gradient(to right, rgba(7, 36, 24, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(7, 36, 24, 0.045) 1px, transparent 1px);
+}
+
+/* Shimmer Button Accent */
+@keyframes os-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.animate-os-shimmer {
+  animation: os-shimmer 2.5s infinite;
+}
+
+/* Keep the long-form page compact without crowding the hero. */
+main > section:not(#hero) {
+  padding-top: clamp(1.75rem, 3vw, 2.5rem);
+  padding-bottom: clamp(2rem, 3vw, 3rem);
+}
+
+main > section#about {
+  padding-top: clamp(1.5rem, 2.5vw, 2rem);
+}
+
+main > section [style*='opacity: 0'],
+main > section [style*='opacity:0'] {
+  opacity: 1 !important;
+}
